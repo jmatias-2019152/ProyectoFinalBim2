@@ -3,12 +3,15 @@ import cors from 'cors'
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { dbConnection } from './mongo.js';
+import authRoutes from '../src/auth/auth.routes.js'
+import userRoutes from '../src/users/user.routes.js'
 
 class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT;
-
+        this.authPath = '/hotelsSystem/v1/auth'
+        this.userPath = '/hotelsSystem/v1/user'
         this.conectarDB(); 
         this.middlewares();
         this.routes();
@@ -28,7 +31,9 @@ class Server {
     };
 
    
-    routes() {        
+    routes() {  
+        this.app.use(this.authPath, authRoutes);      
+        this.app.use(this.userPath, userRoutes);
     };
 
     listen() {

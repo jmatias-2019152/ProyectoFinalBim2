@@ -1,0 +1,79 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "Hotel",
+    "collectionId": "1b18c638-52cc-4623-89de-15dec06ea034",
+    "dateExported": "2024-05-03T03:46:08.772Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "62810c26-a4ed-4990-9a4e-f2e071e94556",
+            "colId": "1b18c638-52cc-4623-89de-15dec06ea034",
+            "containerId": "",
+            "name": "login",
+            "url": "http://127.0.0.1:8080/hotelsSystem/v1/auth/login",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-05-03T03:02:26.377Z",
+            "modified": "2024-05-03T03:03:55.217Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"usuario\":\"dbarton\", \n  \"password\": \"123456\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "a9ca7bce-fa1b-45e9-879e-63955ed5ff4e",
+            "colId": "1b18c638-52cc-4623-89de-15dec06ea034",
+            "containerId": "",
+            "name": "register",
+            "url": "http://127.0.0.1:8080/hotelsSystem/v1/user/register",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-05-03T03:37:36.292Z",
+            "modified": "2024-05-03T03:43:27.850Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"kinal\",\n  \"email\": \"kinal@gg.com\",\n  \"username\": \"kinal63\",\n  \"password\": \"123456\",\n  \"phone\": \"78946512\",\n  \"dpi\": \"7891234561472\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "34ca9d72-eb14-478b-a7a9-c0cc0a53f40c",
+            "colId": "1b18c638-52cc-4623-89de-15dec06ea034",
+            "containerId": "",
+            "name": "userUpdate",
+            "url": "http://127.0.0.1:8080/hotelsSystem/v1/user/updateuser/66345d5fc2e53741e583fcda",
+            "method": "PUT",
+            "sortNum": 30000,
+            "created": "2024-05-03T03:43:46.531Z",
+            "modified": "2024-05-03T03:44:50.589Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"kinal@63.com\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "442d083b-7997-4b7a-beb9-ba259bfd8d67",
+            "colId": "1b18c638-52cc-4623-89de-15dec06ea034",
+            "containerId": "",
+            "name": "deleteUser",
+            "url": "http://127.0.0.1:8080/hotelsSystem/v1/user/deleteuser/66345d5fc2e53741e583fcda",
+            "method": "DELETE",
+            "sortNum": 40000,
+            "created": "2024-05-03T03:45:02.251Z",
+            "modified": "2024-05-03T03:45:30.363Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"kinal@63.com\"\n}",
+                "form": []
+            }
+        }
+    ],
+    "ref": "crh8L_AbZxs5BJnnZGL34Pqq0VIEu5YK0SQ0N0psNgXlzwKtWwn00-hyliKyUiWT4j6siRBIyW3huvILjAehcw"
+}
