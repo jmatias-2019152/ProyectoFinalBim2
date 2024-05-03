@@ -7,17 +7,22 @@ import morgan from 'morgan';
 import { dbConnection } from './mongo.js';
 import hotelesRoutes from '../src/hoteles/hoteles.routes.js';
 import habitacionesRoutes from '../src/habitaciones/habitaciones.routes.js';
+import authRoutes from '../src/auth/auth.routes.js'
+import userRoutes from '../src/users/user.routes.js'
 
 
-class Server{
-    constructor(){
-        this.app = express()
-        this.port = process.env.PORT
+class Server {
+    constructor() {
+        this.app = express();
+        this.port = process.env.PORT;
+        this.authPath = '/hotelsSystem/v1/auth'
+        this.userPath = '/hotelsSystem/v1/user'
         this.hotelesPath = '/api_Hoteles/v1/hoteles'
         this.habitacionesPath = '/api_Hoteles/v1/habitaciones'
-        this.middlewares()
-        this.conectarDB()
-        this.routes()
+        this.conectarDB(); 
+        this.middlewares();
+        this.routes();
+
     }
 
     async conectarDB(){
@@ -32,10 +37,15 @@ class Server{
         this.app.use(morgan('dev'))
     }
 
-    routes(){
+
+   
+    routes() {  
+        this.app.use(this.authPath, authRoutes);      
+        this.app.use(this.userPath, userRoutes);
         this.app.use(this.hotelesPath, hotelesRoutes);
         this.app.use(this.habitacionesPath, habitacionesRoutes)
-    }
+    };
+
 
     listen(){
         this.app.listen(this.port, () => {
