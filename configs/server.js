@@ -6,7 +6,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import { dbConnection } from './mongo.js';
 import hotelesRoutes from '../src/hoteles/hoteles.routes.js';
-/*import habitacionesRoutes from '../src/habitaciones/habitaciones.routes.js'*/
+import habitacionesRoutes from '../src/habitaciones/habitaciones.routes.js';
 
 
 class Server{
@@ -34,7 +34,7 @@ class Server{
 
     routes(){
         this.app.use(this.hotelesPath, hotelesRoutes);
-        /*this.app.use(this.habitacionesPath, habitacionesRoutes)*/
+        this.app.use(this.habitacionesPath, habitacionesRoutes)
     }
 
     listen(){

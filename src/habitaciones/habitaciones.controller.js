@@ -32,13 +32,21 @@ export const crearHabitacion = async (req, res) => {
 };
 
 // Obtener todas las habitaciones
-export const obtenerTodasLasHabitaciones = async (req, res) => {
+export const mostrarTodasLasHabitaciones = async (req, res) => {
     try {
         const habitaciones = await Habitacion.find();
-        return res.status(200).json(habitaciones);
+
+        if (!habitaciones || habitaciones.length === 0) {
+            return res.status(404).json({ msg: "No se encontraron habitaciones" });
+        }
+
+        return res.status(200).json({
+            msg: "Lista de todas las habitaciones",
+            habitaciones
+        });
     } catch (error) {
         console.error(error);
-        return res.status(500).send("Error al obtener todas las habitaciones");
+        return res.status(500).send("Error al obtener las habitaciones");
     }
 };
 
@@ -60,24 +68,26 @@ export const obtenerHabitacionPorId = async (req, res) => {
 // Actualizar información de una habitación
 export const actualizarHabitacion = async (req, res) => {
     try {
-        const { id } = req.params;
         const { tipoHabitacion, capacidad, precio, disponibilidad, hotelAsociado } = req.body;
-        
-        const habitacionActualizada = await Habitacion.findByIdAndUpdate(id, {
-            tipoHabitacion,
-            capacidad,
-            precio,
-            disponibilidad,
-            hotelAsociado
-        }, { new: true });
+        const { id } = req.params;
 
-        if (!habitacionActualizada) {
-            return res.status(404).send("Habitación no encontrada");
+        const habitacion = await Habitacion.findById(id);
+
+        if (!habitacion) {
+            return res.status(404).json({ msg: "Habitación no encontrada" });
         }
-        
+
+        if (tipoHabitacion) habitacion.tipoHabitacion = tipoHabitacion;
+        if (capacidad) habitacion.capacidad = capacidad;
+        if (precio) habitacion.precio = precio;
+        if (disponibilidad !== undefined) habitacion.disponibilidad = disponibilidad;
+        if (hotelAsociado) habitacion.hotelAsociado = hotelAsociado;
+
+        await habitacion.save();
+
         return res.status(200).json({
-            msg: "Habitación actualizada exitosamente",
-            habitacion: habitacionActualizada
+            msg: "Habitación actualizada correctamente",
+            habitacion
         });
     } catch (error) {
         console.error(error);

@@ -11,7 +11,9 @@ router.post(
         check('nombreHotel', 'El nombre del hotel es obligatorio').not().isEmpty(),
         check('dirección', 'La dirección del hotel es obligatoria').not().isEmpty(),
         check('precio', 'El precio del hotel es obligatorio').not().isEmpty(),
-        check('descripcion', 'La descripción del hotel es obligatoria').not().isEmpty(),
+        check('descripcion', 'La descripción del hotel es obligatoria').not().isEmpty(), 
+        check('serviciosAdicionales', 'Los servicios del hotel son obligatorios'), //Poner .not().isEmpty(), cuando esten completos los modelos
+        check('evento', 'Los eventos del hotel son obligatorios'), //Poner .not().isEmpty(), cuando esten completos los modelos
         validarCampos,
     ], 
     agregarHotel
