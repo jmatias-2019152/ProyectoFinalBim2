@@ -27,7 +27,7 @@ const HotelSchema = new mongoose.Schema ({
     evento: [
         {
           type: mongoose.Schema.Types.ObjectId,
-          ref: 'evento',
+          ref: 'Eventos',
         },
       ],
 

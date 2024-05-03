@@ -1,0 +1,40 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "ServiciosAdicionales",
+    "collectionId": "3ec68bf9-5102-4109-b685-68cafc99d3c3",
+    "dateExported": "2024-05-03T06:52:54.746Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "030fb17a-1b48-43f7-8727-14589e358c64",
+            "colId": "3ec68bf9-5102-4109-b685-68cafc99d3c3",
+            "containerId": "",
+            "name": "postServicio",
+            "url": "http://localhost:8080/api_Hoteles/v1/servicios/agregar",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-05-03T06:45:09.091Z",
+            "modified": "2024-05-03T06:51:16.663Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"tipoDeServicio\":\"Comida\",\n  \"descripcion\":\"Servicio de comida para la duracion entera del evento\",\n  \"precio\":\"Q.1000.00\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "fc40de90-b84b-49af-bf47-6a53921e74e1",
+            "colId": "3ec68bf9-5102-4109-b685-68cafc99d3c3",
+            "containerId": "",
+            "name": "getServicios",
+            "url": "http://localhost:8080/api_Hoteles/v1/servicios/get",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2024-05-03T06:49:55.636Z",
+            "modified": "2024-05-03T06:50:02.656Z",
+            "headers": []
+        }
+    ],
+    "ref": "NgSvpAiXW9bDGTzqGSB6xzd5WkBHEgf2WpnkGoWKS5-0tMvujrsGfvFLNqMHYRTpscgiHEYNh5VGh0OVDJhLpg"
+}

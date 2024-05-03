@@ -9,16 +9,20 @@ import hotelesRoutes from '../src/hoteles/hoteles.routes.js';
 import habitacionesRoutes from '../src/habitaciones/habitaciones.routes.js';
 import authRoutes from '../src/auth/auth.routes.js'
 import userRoutes from '../src/users/user.routes.js'
+import serviciosRoutes from '../src/serviciosAdicionales/servicios.routes.js'
+import eventosRoutes from '../src/eventos/eventos.routes.js'
 
 
 class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT;
-        this.authPath = '/hotelsSystem/v1/auth'
-        this.userPath = '/hotelsSystem/v1/user'
+        this.authPath = '/api_Hoteles/v1/auth'
+        this.userPath = '/api_Hoteles/v1/user'
         this.hotelesPath = '/api_Hoteles/v1/hoteles'
         this.habitacionesPath = '/api_Hoteles/v1/habitaciones'
+        this.serviciosAdPath = '/api_Hoteles/v1/servicios'
+        this.eventosPath = '/api_Hoteles/v1/eventos'
         this.conectarDB(); 
         this.middlewares();
         this.routes();
@@ -44,6 +48,8 @@ class Server {
         this.app.use(this.userPath, userRoutes);
         this.app.use(this.hotelesPath, hotelesRoutes);
         this.app.use(this.habitacionesPath, habitacionesRoutes)
+        this.app.use(this.serviciosAdPath, serviciosRoutes)
+        this.app.use(this.eventosPath, eventosRoutes)
     };
 
 
