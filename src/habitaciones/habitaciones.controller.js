@@ -1,7 +1,7 @@
 import Habitacion from '../habitaciones/habitaciones.model.js'; // Importa el modelo de Habitacion
+import Hotel from '../hoteles/hoteles.model.js'
 import { validationResult } from 'express-validator';
 
-// Crear una nueva habitación
 export const crearHabitacion = async (req, res) => {
     try {
         const errors = validationResult(req);
@@ -10,6 +10,11 @@ export const crearHabitacion = async (req, res) => {
         }
 
         const { tipoHabitacion, capacidad, precio, disponibilidad, hotelAsociado } = req.body;
+
+        const hotelExistente = await Hotel.findById(hotelAsociado);
+        if (!hotelExistente) {
+            return res.status(404).json({ msg: 'El hotel asociado no existe' });
+        }
 
         const habitacion = new Habitacion({
             tipoHabitacion,
@@ -31,7 +36,6 @@ export const crearHabitacion = async (req, res) => {
     }
 };
 
-// Obtener todas las habitaciones
 export const mostrarTodasLasHabitaciones = async (req, res) => {
     try {
         const habitaciones = await Habitacion.find();
@@ -50,7 +54,7 @@ export const mostrarTodasLasHabitaciones = async (req, res) => {
     }
 };
 
-// Obtener una habitación por su ID
+
 export const obtenerHabitacionPorId = async (req, res) => {
     try {
         const { id } = req.params;
@@ -95,7 +99,7 @@ export const actualizarHabitacion = async (req, res) => {
     }
 };
 
-// Eliminar una habitación
+
 export const eliminarHabitacion = async (req, res) => {
     try {
         const { id } = req.params;

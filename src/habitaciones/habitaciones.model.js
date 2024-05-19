@@ -15,12 +15,12 @@ const HabitacionSchema = new mongoose.Schema({
     },
     disponibilidad: {
         type: Boolean,
-        default: true // La habitación está disponible por defecto
+        default: true 
     },
     hotelAsociado: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Hotel', // Referencia al modelo de Hotel
-        /*required: [true, "El hotel asociado es obligatorio"]*/
+        required: [true, "El hotel asociado es obligatorio"]
     }
 });
 

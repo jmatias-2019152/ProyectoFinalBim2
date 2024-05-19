@@ -12,7 +12,7 @@ router.post(
         check('capacidad', 'La capacidad de la habitación es obligatoria').not().isEmpty(),
         check('precio', 'El precio de la habitación es obligatorio').not().isEmpty(),
         check('disponibilidad', 'La disponibilidad de la habitación es obligatoria').not().isEmpty(),
-        check('hotelAsociado', 'El hotel asociado es obligatorio'), //Poner .not().isEmpty(), cuando esten completos los modelos
+        check('hotelAsociado', 'El hotel asociado es obligatorio').not().isEmpty(), 
         validarCampos
     ],
     crearHabitacion

@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { check } from "express-validator";
-import { register, updateUser, userDelete} from "./user.controller.js";
+import { register, registerAdmin, registerProgramador, updateUser, userDelete} from "./user.controller.js";
 import { validarCampos } from "../middlewares/validar-campos.js";
+import { validarJWT, soloProgramador, adminOCliente } from "../middlewares/validar-jwt.js";
 
 const router = Router();
 
@@ -12,29 +13,51 @@ router.post(
     check("email", "Este no es un correo válido").isEmail(),
     check("username", "El username es obligatorio").not().isEmpty(),
     check("password", "El password debe ser mayor a 4 caracteres").isLength({min: 4,}),
-    check("phone","El teléfono debe de contener 8 números").isLength({min: 8, max:8}),
-    check("dpi", "El dpi es obligatorio").not().isEmpty(),
     validarCampos,
   ],
   register
 );
 
-// Ruta para actualizar un usuario por su ID
+router.post(
+  "/registerProgramador",
+  [
+    check("name", "El nombre es obligatorio").not().isEmpty(),
+    check("email", "Este no es un correo válido").isEmail(),
+    check("username", "El username es obligatorio").not().isEmpty(),
+    check("password", "El password debe ser mayor a 4 caracteres").isLength({min: 4,}),
+    validarCampos,validarJWT, soloProgramador
+  ],
+  registerProgramador
+);
+
+router.post(
+  "/registerAdmin",
+  [
+    check("name", "El nombre es obligatorio").not().isEmpty(),
+    check("email", "Este no es un correo válido").isEmail(),
+    check("username", "El username es obligatorio").not().isEmpty(),
+    check("password", "El password debe ser mayor a 4 caracteres").isLength({min: 4,}),
+    validarCampos,validarJWT, soloProgramador
+  ],
+  registerAdmin
+);
+
+
+
 router.put(
   "/updateuser/:id",
   [
     check("id", "No es un ID válido").isMongoId(),
-    validarCampos,
+    validarCampos,  validarJWT, adminOCliente
   ],
   updateUser
 );
 
-// Ruta para eliminar un usuario por su ID
 router.delete(
   "/deleteuser/:id",
   [
     check("id", "No es un ID válido").isMongoId(),
-    validarCampos,
+    validarCampos, validarJWT, adminOCliente
   ],
   userDelete
 );

@@ -20,7 +20,7 @@ const HotelSchema = new mongoose.Schema ({
     serviciosAdicionales: [
         {
           type: mongoose.Schema.Types.ObjectId,
-          /*required: [true, 'Servicios adicionales obligatorios'],*/
+          required: [true, 'Servicios adicionales obligatorios'],
           ref: 'ServiciosAdicionales',
         },
       ],

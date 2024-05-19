@@ -28,10 +28,7 @@ const Eventos = new mongoose.Schema({
     cliente: {
         type: String,
         required: true
-        /*type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-        Esto se pone cuando se hagan validaciones y otras funciones
-        */
+
     },
     estado: {
         type: String,

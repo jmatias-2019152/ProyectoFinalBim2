@@ -2,11 +2,39 @@ import { response, request } from "express";
 import bcryptjs from 'bcryptjs';
 import User from '../users/user.model.js';
 
+export const registerProgramador = async (req, res) => {
+    try {
+        let data = req.body
+        data.password = await encrypt(data.password)
+        data.role = 'PROGRAMADOR'
+        let user = new User(data)
+        await user.save()
+        return res.send({ message: `Registered admin successfully, can be logged with username ${user.username}` })
+    } catch (error) {
+        console.error(error)
+        return res.status(500).send({ message: 'Error registering user', error: error })
+    }
+}
+
+export const registerAdmin = async (req, res) => {
+    try {
+        let data = req.body
+        data.password = await encrypt(data.password)
+        data.role = 'ADMINISTRADOR'
+        let user = new User(data)
+        await user.save()
+        return res.send({ message: `Registered admin successfully, can be logged with username ${user.username}` })
+    } catch (error) {
+        console.error(error)
+        return res.status(500).send({ message: 'Error registering user', error: error })
+    }
+}
+
 export const register = async (req, res) => {
     try {
-        const { name, email, username, password, phone, dpi, role } = req.body;
+        const { name, email, username, password, role } = req.body;
 
-        const user = new User({ name, email, username, password, phone, dpi, role });
+        const user = new User({ name, email, username, password, role });
 
         const salt = bcryptjs.genSaltSync();
         user.password = bcryptjs.hashSync(password, salt);
@@ -25,6 +53,31 @@ export const register = async (req, res) => {
         });
     }
 };
+
+export const listar = async (req, res) => {
+    try {
+        // Buscar el usuario por su ID en la base de datos
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+        // Construir el objeto de respuesta con los detalles del usuario
+        const userDetails = {
+            name: user.name,
+            surname: user.surname,
+            email: user.email,
+            phone: user.phone,
+            username: user.username,
+            role: user.role
+        };
+        // Enviar la respuesta con los detalles del usuario
+        return res.send({ userDetails });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send({ message: 'Error getting user details' });
+    }
+};
+
 
 export const updateUser = async (req, res = response) => {
     const { id } = req.params;
@@ -51,10 +104,7 @@ export const updateUser = async (req, res = response) => {
 export const userDelete = async (req, res) => {
     try {
         const { id } = req.params;
-
-        // Desactiva el usuario en lugar de borrarlo permanentemente
         const user = await User.findByIdAndUpdate(id, { estado: false });
-
         res.status(200).json({ msg: 'The user desactived susccessfully', user });
 
     } catch (error) {

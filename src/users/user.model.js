@@ -15,15 +15,6 @@ const UserSchema = mongoose.Schema({
     password: {
         type: String
     },
-    phone: {
-        type: String,
-        minLength: 8,
-        maxLength: 8,
-        required: true,
-    },
-    dpi: {
-        type: String
-    },
     role: {
         type: String,
         required: true,

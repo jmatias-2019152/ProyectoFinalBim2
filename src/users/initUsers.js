@@ -13,7 +13,7 @@ async function connectToMongo() {
         console.log('MongoDB conectado exitosamente.');
     } catch (error) {
         console.error('Error al conectar a MongoDB:', error.message);
-        process.exit(1); // Termina la aplicación si no se puede conectar a MongoDB
+        process.exit(1); 
     }
 }
 
@@ -30,8 +30,6 @@ async function addUser(user) {
                 email: user.email,
                 username: user.username,
                 password: hashedPassword,
-                phone: user.phone,
-                dpi: user.dpi,
                 role: user.role,
                 img: user.img,
                 state: user.estado,
@@ -55,8 +53,6 @@ async function addUsers() {
             email: "dbarton@kinal.edu",
             username: "dbarton",
             password: "123456",
-            phone: "17283946",
-            dpi: "1472583697894",
             role: "PROGRAMADOR",
             state: "true",
         },
@@ -65,8 +61,6 @@ async function addUsers() {
             email: "dmarroquin@kinal.edu",
             username: "dmarroquin",
             password: "123456",
-            phone: "17283946",
-            dpi: "1472583697894",
             role: "PROGRAMADOR",
             state: "true",
         },
@@ -75,8 +69,6 @@ async function addUsers() {
             email: "jmatias@kinal.edu",
             username: "jmatias",
             password: "123456",
-            phone: "17283946",
-            dpi: "1472583697894",
             role: "PROGRAMADOR",
             state: "true",
         },
@@ -85,8 +77,6 @@ async function addUsers() {
             email: "hrodriguez@kinal.edu",
             username: "hrodriguez",
             password: "123456",
-            phone: "17283946",
-            dpi: "1472583697894",
             role: "PROGRAMADOR",
             state: "true",
         },
@@ -95,8 +85,6 @@ async function addUsers() {
             email: "bmendoza@kinal.edu",
             username: "bmendoza",
             password: "123456",
-            phone: "17283946",
-            dpi: "1472583697894",
             role: "PROGRAMADOR",
             state: "true",
         },
@@ -105,8 +93,6 @@ async function addUsers() {
             email: "braulio@kinal.edu",
             username: "becheveria",
             password: "123456",
-            phone: "17283946",
-            dpi: "1472583697894",
             role: "PROGRAMADOR",
             state: "true",
         },
