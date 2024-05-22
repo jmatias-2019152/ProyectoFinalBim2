@@ -1,0 +1,97 @@
+/* Navbar Styles */
+.custom-navbar {
+    background-color: #ecf8d4; /* Light background */
+    margin-bottom: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px 20px;
+    transition: top 0.3s;
+    top: 0;
+    width: 100%;
+    position: fixed;
+    z-index: 1000;
+  }
+  
+  .custom-navbar.hide {
+    top: -50px; /* Ajustar según la altura del navbar para cuando baje y suba */
+  }
+  
+  .custom-navbar.show {
+    top: 0;
+  }
+  
+  /* Logo Styles */
+  .navbar-logo {
+    width: 150px;
+    height: auto;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .navbar-logo:hover {
+    transform: scale(1.1);
+  }
+  
+  /* Link Styles */
+  .custom-link {
+    color: #85685a; /* Text color */
+    cursor: pointer;
+    transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    text-decoration: none; /* Remove underline */
+    position: relative;
+  }
+  
+  .custom-link:hover {
+    color: #cb8e5f; /* Text hover color */
+    background-color: #e0deab; /* Background hover color */
+  }
+  
+  .custom-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    display: block;
+    margin-top: 5px;
+    right: 0;
+    background: #cb8e5f; /* underline color */
+    transition: width 0.3s ease;
+    transition-delay: 0.3s;
+  }
+  
+  .custom-link:hover::after {
+    width: 100%;
+    left: 0;
+  }
+  
+  /* Dropdown Styles */
+  .custom-dropdown {
+    background-color: transparent;
+    border: none;
+    color: #85685a; /* Text color */
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+  }
+  
+  .custom-dropdown:hover {
+    color: #0d0502; /* Text hover color */
+  }
+  
+  .custom-dropdown-item {
+    color: #85685a; /* Text color */
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .custom-dropdown-item:hover {
+    background-color: rgba(#cb8e5f, 0.2); /* Background hover color */
+  }
+  
+  /* Logout Styles */
+  .custom-logout {
+    color: #0d0502 !important; /* Text color */
+  }
+  
+  .custom-logout:hover {
+    background-color: rgba(#0d0502, 0.2) !important; /* Background hover color */
+  }
+  

@@ -1,0 +1,32 @@
+.container {
+    background-color: #ecf8d4;
+    padding: 20px;
+}
+
+.profile-container {
+    background-color: #e0deab;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.card {
+    background-color: #cb8e5f;
+}
+
+.form-item {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    color: #85685a;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.edit-button {
+    background-color: #0d0502;
+}
