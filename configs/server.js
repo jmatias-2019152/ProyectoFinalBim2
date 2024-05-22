@@ -20,14 +20,14 @@ class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT;
-        this.authPath = '/api_Hoteles/v1/auth'
-        this.userPath = '/api_Hoteles/v1/user'
-        this.hotelesPath = '/api_Hoteles/v1/hoteles'
-        this.habitacionesPath = '/api_Hoteles/v1/habitaciones'
-        this.serviciosAdPath = '/api_Hoteles/v1/servicios'
-        this.eventosPath = '/api_Hoteles/v1/eventos'
-        this.categoriPath = '/api_Hoteles/v1/categorias'
-        this.reservacionePath= '/api_Hoteles/v1/categorias'
+        this.authPath = '/auth'
+        this.userPath = '/user'
+        this.hotelesPath = '/hotel'
+        this.habitacionesPath = '/room'
+        this.serviciosAdPath = '/service'
+        this.eventosPath = '/eventos'
+        this.categoriPath = '/category'
+        this.reservacionePath= '/reservation'
         this.conectarDB(); 
         this.middlewares();
         this.routes();

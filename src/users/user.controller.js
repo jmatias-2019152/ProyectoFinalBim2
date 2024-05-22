@@ -32,9 +32,9 @@ export const registerAdmin = async (req, res) => {
 
 export const register = async (req, res) => {
     try {
-        const { name, email, username, password, role } = req.body;
+        const { name, surname, phone,email, username, password, role } = req.body;
 
-        const user = new User({ name, email, username, password, role });
+        const user = new User({ name, surname, phone, email, username, password, role });
 
         const salt = bcryptjs.genSaltSync();
         user.password = bcryptjs.hashSync(password, salt);

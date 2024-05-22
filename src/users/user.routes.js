@@ -7,7 +7,7 @@ import { validarJWT, soloProgramador, adminOCliente } from "../middlewares/valid
 const router = Router();
 
 router.post(
-  "/register",
+  "/registerClient",
   [
     check("name", "El nombre es obligatorio").not().isEmpty(),
     check("email", "Este no es un correo válido").isEmail(),
@@ -45,7 +45,7 @@ router.post(
 
 
 router.put(
-  "/updateuser/:id",
+  "/update/:id",
   [
     check("id", "No es un ID válido").isMongoId(),
     validarCampos,  validarJWT, adminOCliente
@@ -54,7 +54,7 @@ router.put(
 );
 
 router.delete(
-  "/deleteuser/:id",
+  "/delete/:id",
   [
     check("id", "No es un ID válido").isMongoId(),
     validarCampos, validarJWT, adminOCliente

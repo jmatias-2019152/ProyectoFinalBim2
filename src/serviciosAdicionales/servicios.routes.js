@@ -7,7 +7,7 @@ import {validarJWT, soloProgramador} from "../middlewares/validar-jwt.js"
 const router = Router();
 
 router.post(
-    "/agregar",
+    "/createService",
     [
         check('tipoDeServicio', 'El nombre del servicio es obligatorio').not().isEmpty(),
         check('descripcion', 'La descripcion del servicio es obligatoria').not().isEmpty(),
@@ -19,25 +19,25 @@ router.post(
 );
 
 router.get(
-    "/get",
+    "/readService",
     [], 
     listarServicio
 );
 
 router.post(
-    "/buscar",
+    "/searchService",
     [ validarJWT],
     buscarServicios
 );
 
 router.put(
-    '/editar/:id',
+    '/updateService/:id',
     [validarJWT, soloProgramador],
     editarServicio
 );
 
 router.delete(
-    '/delete/:id',
+    '/deleteService/:id',
     [validarJWT, soloProgramador],
     eliminarServicio
 )
