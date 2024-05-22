@@ -1,26 +1,32 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const HabitacionSchema = new mongoose.Schema({
-    tipoHabitacion: {
+    tipoDeHabitacion:{
         type: String,
-        required: [true, "El tipo de habitación es obligatorio"]
+        required: true
     },
-    capacidad: {
+    description:{
+        type: String,
+        required: true
+    },
+    price:{
         type: Number,
-        required: [true, "La capacidad de la habitación es obligatoria"]
+        required: true
     },
-    precio: {
+    hotel: {
+        type: Schema.Types.ObjectId,
+        ref: 'hotel',
+        required: true
+    },
+    contador: {
         type: Number,
-        required: [true, "El precio de la habitación es obligatorio"]
+        required: true,
+        default: 0
     },
-    disponibilidad: {
-        type: Boolean,
-        default: true 
-    },
-    hotelAsociado: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Hotel', // Referencia al modelo de Hotel
-        required: [true, "El hotel asociado es obligatorio"]
+    image:{
+        type: String,
+        required: true
+
     }
 });
 

@@ -1,53 +1,41 @@
 import { Router } from "express";
 import { check } from "express-validator";
-import { agregarHotel, obtenerHoteles, obtenerHotelPorId, actualizarHotel, eliminarHotel } from "./hoteles.controller.js";
+import { actualizarHotel, agregarHotel, buscarHoteles, eliminarHotel, listarHoteles } from "./hoteles.controller.js";
 import { validarCampos } from "../middlewares/validar-campos.js";
+import {soloProgramador, validarJWT }from '../middlewares/validar-jwt.js'
+import { uploadImage } from '../middlewares/manejoImagenes.js'
+import { ReadPreference } from "mongodb";
 
 const router = Router();
 
+router.get(
+    '/listar',
+    [validarJWT],
+    listarHoteles
+)
+
 router.post(
-    "/agregar",
-    [
-        check('nombreHotel', 'El nombre del hotel es obligatorio').not().isEmpty(),
-        check('dirección', 'La dirección del hotel es obligatoria').not().isEmpty(),
-        check('precio', 'El precio del hotel es obligatorio').not().isEmpty(),
-        check('descripcion', 'La descripción del hotel es obligatoria').not().isEmpty(), 
-        check('serviciosAdicionales', 'Los servicios del hotel son obligatorios'), //Poner .not().isEmpty(), cuando esten completos los modelos
-        check('evento', 'Los eventos del hotel son obligatorios'), //Poner .not().isEmpty(), cuando esten completos los modelos
-        validarCampos,
-    ], 
+    '/buscar',
+    [validarJWT],
+    buscarHoteles
+)
+
+router.post(
+    '/agregar',
+    [validarJWT, soloProgramador], uploadImage.single('image'),
     agregarHotel
-);
-
-router.get(
-    "/get",
-    [], 
-    obtenerHoteles
-);
-
-router.get(
-    "/get/:id",
-    [], 
-    obtenerHotelPorId
-);
+)
 
 router.put(
-    "/put/:id",
-    [
-        check("id", "ID de hotel no válido").isMongoId(),
-        check("id").custom(obtenerHotelPorId),
-        
-    ], 
+    '/editar/:id',
+    [validarJWT, soloProgramador], uploadImage.single('image'),
     actualizarHotel
-);
+)
 
-router.delete(
-    "/del/:id",
-    [
-        check("id", "ID de hotel no válido").isMongoId(),
-        check('creador', 'El creador es obligatorio').not().isEmpty(),
-    ], 
+router.get(
+    '/delete/:id',
+    [validarJWT, soloProgramador], 
     eliminarHotel
-);
+)
 
 export default router;

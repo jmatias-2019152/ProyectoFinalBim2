@@ -56,24 +56,19 @@ export const register = async (req, res) => {
 
 export const listar = async (req, res) => {
     try {
-        // Buscar el usuario por su ID en la base de datos
         const user = await User.findById(req.params.id);
         if (!user) {
             return res.status(404).send({ message: 'User not found' });
         }
-        // Construir el objeto de respuesta con los detalles del usuario
-        const userDetails = {
+        const userL = {
             name: user.name,
-            surname: user.surname,
-            email: user.email,
-            phone: user.phone,
             username: user.username,
+            email: user.email,
             role: user.role
         };
-        // Enviar la respuesta con los detalles del usuario
-        return res.send({ userDetails });
-    } catch (err) {
-        console.error(err);
+        return res.send({ userL });
+    } catch (error) {
+        console.error(error);
         return res.status(500).send({ message: 'Error getting user details' });
     }
 };

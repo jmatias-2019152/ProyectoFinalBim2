@@ -1,37 +1,38 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const HotelSchema = new mongoose.Schema ({
-    nombreHotel:{
-        type: String,
-        required: [true, "El nombre del hotel es obligatorio"]
-    },
-    dirección:{
-        type:String,
-        required: [true, "La direccion de la caregoria es obligatoria"]
-    },
-    precio: {
-        type: String,
-        require: [true, 'El precio del producto es obligatorio'],
-    },
-    descripción: {
-        type: String,
-        require: [true, 'la descripcion del hotel es obligatoria'],
-    },
-    serviciosAdicionales: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          required: [true, 'Servicios adicionales obligatorios'],
-          ref: 'ServiciosAdicionales',
-        },
-      ],
-    evento: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'Eventos',
-        },
-      ],
+  name: {
+    type: String,
+    required: true
+},
+user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+},
+categoria: {
+    type: Schema.Types.ObjectId,
+    ref: 'Categoria',
+    required: true
+},
+direccion:{
+    type: String,
+    required: true
+},
+email: {
+    type: String,
+    required: true
+},
+contador: {
+    type: Number, 
+    required: true,
+    default: 0
 
-
+},
+image:{
+    type: String,
+    required: true
+}
 });
 
 export default mongoose.model('Hotel', HotelSchema);

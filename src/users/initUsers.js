@@ -17,6 +17,7 @@ async function connectToMongo() {
     }
 }
 
+
 async function addUser(user) {
     try {
         const existingUser = await UserModel.findOne({ email: user.email });
@@ -37,7 +38,7 @@ async function addUser(user) {
 
             console.log(`Usuario agregado: ${user.email}`);
         } else {
-
+            console.log(`El usuario con el correo ${user.email} ya existe. Puede iniciar sesion`);
         }
     } catch (error) {
         console.error(`Error al agregar el usuario con correo ${user.email}:`, error.message);

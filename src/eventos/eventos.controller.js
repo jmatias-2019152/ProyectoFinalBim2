@@ -1,62 +1,112 @@
 import Evento from "../eventos/eventos.model.js";
+import Hotel from '../hoteles/hoteles.model.js'
+import path from "path";
+import * as fs from 'fs'
+
+// Obtener todos los eventos
+export const listarEventos = async (req, res) => {
+    try {
+      let events = await Event.find().populate('Hotel', ['name', 'email'])
+      return res.send(events) 
+    } catch (error) {
+      console.log(error)
+      return res.status(500).send({ message: 'They can not be seen the Events' }) 
+    }
+  }
+
+// Obtener un evento por su Nombre
+export const buscarEvento = async (req, res) => {
+    try {
+        const { type } = req.body;
+        if (!type) {
+            return res.status(400).send({ message: 'Type is required' });
+        }
+        const regex = new RegExp(type, 'i');
+  
+        const evento = await Evento.find({ type: regex }).populate('hotel', ['name']);
+        if (!evento || evento.length === 0) {
+            return res.status(404).send({ message: 'No events found' });
+        }
+        return res.send({ message: 'Events found', evento });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send({ message: 'Error searching events' });
+    }
+  };
 
 export const agregarEvento = async (req, res) => {
     try {
-        const { tipoDeEvento, fechaHoraInicio, fechaHoraFin, numeroAsistentes, serviciosAdicionales, presupuesto, cliente } = req.body;
-
+        const {tipoDeEvento,precio,hotel} = req.body
+        const existingHotel = await Hotel.findById(hotel);
+        if (!existingHotel) {
+            return res.status(404).send({ message: 'Hotel not found' })
+        }
+        console.log(req.file)
         const evento = new Evento({
-            tipoDeEvento,
-            fechaHoraInicio,
-            fechaHoraFin,
-            numeroAsistentes,
-            serviciosAdicionales,
-            presupuesto,
-            cliente
-        });
-
-        await evento.save();
-
-        return res.status(200).json({
-            msg: "Evento agregado exitosamente a la base de datos!",
-            evento
-        });
+            tipoDeEvento: tipoDeEvento,
+            precio:precio,
+            hotel:hotel,
+          image:'/imagenes/' + req.file.filename
+        })
+        await evento.save()
+        return res.send({ message: 'Event saved successfully' })
     } catch (error) {
-        console.error(error);
-        return res.status(500).send("No se pudo agregar el Evento a la base de datos");
+        console.error(error)
+        return res.status(500).send({ message: 'Error saving event  ' })
     }
 };
 
-
-
-export const mostrarTodosLosEventos = async (req, res) => {
+// Actualizar un evento
+export const actualizarEvento = async (req, res) => {
     try {
-        const evento = await Evento.find();
-
-        if (!evento || evento.length === 0) {
-            return res.status(404).json({ msg: "No se encontraron eventos" });
+        const data = req.body
+        const { id } = req.params
+        if (req.file) {
+            const evento = await Evento.findById(id)
+            if (evento.image) {
+                const imagePath = '.' + evento.image
+                if (fs.existsSync(imagePath)) {
+                    fs.unlinkSync(imagePath)
+                } else {
+                    console.log('El archivo a eliminar no existe:', imagePath)
+                }
+            }
+            data.image = '/imagenes/' + req.file.filename 
         }
-
-        return res.status(200).json({
-            msg: "Lista de todos los eventos",
-            evento
-        });
+        const updatedEvent = await Event.findByIdAndUpdate(id, data, { new: true }).populate('Hotel', ['name'])
+        if (!updatedEvent) {
+            return res.status(404).send({ message: 'Event not found and not updated' })
+        }
+        return res.send({ message: 'Event updated successfully', updatedEvent })
     } catch (error) {
-
         console.error(error);
-        return res.status(500).send("Error al obtener los servicios");
+        return res.status(500).send({ message: 'Error updating event' })
     }
-};
+  }
 
-export const eliminarEvento = async (req, res) => {
+  // Eliminar un evento
+  export const eliminarEvento = async (req, res) => {
     try {
-        const { id } = req.body;
-        const eventoEliminado = await Evento.findByIdAndDelete(id);
-        if (!eventoEliminado) {
-            return res.status(404).send("Evento no encontrado");
-        }
-        return res.status(200).send("Evento eliminado correctamente");
+      const deletedEvento = await Evento.findByIdAndDelete(req.params.id) 
+      if (!deletedEvento) {
+        return res.status(404).send({ error: 'Event not found' }) 
+      }
+      res.send({message:'Event was delete succesfully', deletedEvento}) 
     } catch (error) {
-        console.error(error);
-        return res.status(500).send("Error al eliminar el evento");
+      res.status(500).send({ error: 'Could not delete event' }) 
     }
-};
+  }
+
+
+  export const imagen = async(req, res)=>{
+    const { id } = req.params
+    try{
+        const evento = await Evento.findById(id)
+        if(!evento) return res.status(404).send({message: 'Event not found'})
+        const resolve = path.resolve(`src/${evento.image}`)
+        return res.sendFile(resolve)
+    }catch(err){
+        console.error(err)
+        return res.status(500).send({message:'error getting images'})
+    }
+  }

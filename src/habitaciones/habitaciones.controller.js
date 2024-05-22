@@ -1,115 +1,94 @@
 import Habitacion from '../habitaciones/habitaciones.model.js'; // Importa el modelo de Habitacion
-import Hotel from '../hoteles/hoteles.model.js'
-import { validationResult } from 'express-validator';
+import * as fs from 'fs'
+import path from 'path';
 
-export const crearHabitacion = async (req, res) => {
+export const agregarHabitacion = async(req, res)=>{
     try {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
-
-        const { tipoHabitacion, capacidad, precio, disponibilidad, hotelAsociado } = req.body;
-
-        const hotelExistente = await Hotel.findById(hotelAsociado);
-        if (!hotelExistente) {
-            return res.status(404).json({ msg: 'El hotel asociado no existe' });
-        }
-
-        const habitacion = new Habitacion({
-            tipoHabitacion,
-            capacidad,
-            precio,
-            disponibilidad,
-            hotelAsociado
+        let {roomName, description, price, hotel} = req.body
+        let habitacion = new Habitacion({
+            roomName:roomName, 
+            description:description,
+            price:price,
+            hotel:hotel,
+            image:'/imagenes/' + req.file.filename
         });
+        await habitacion.save()
+        res.send({message: 'Room saved successfully'})
 
-        await habitacion.save();
-
-        return res.status(200).json({
-            msg: "¡Habitación agregada exitosamente a la base de datos!",
-            habitacion
-        });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).send("Error al agregar la habitación a la base de datos");
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send({message:'Error saving room', err})
     }
-};
+}
 
-export const mostrarTodasLasHabitaciones = async (req, res) => {
+export const listarHabitacion = async(req, res)=>{
     try {
-        const habitaciones = await Habitacion.find();
+        const habitacion = await Habitacion.find().populate('Hotel', 'name')
+        return res.send({habitacion})
+    } catch (error) {
+        console.error(error)
+        return res.status(500).send({message:  `Error al mostrar habitaciones.`, err})
+    }
+}
 
-        if (!habitaciones || habitaciones.length === 0) {
-            return res.status(404).json({ msg: "No se encontraron habitaciones" });
+// Obtener una habitación por su nombre
+export const buscarHabitacion = async (req, res) => {
+    try {
+        const { search } = req.body
+        const aprox = new RegExp(search, 'i')
+        const rooms = await Habitacion.find({ roomName: aprox }).populate('Hotel', ['name', 'email'])
+        if (!rooms) return res.status(404).send({ message: 'Room not found' })
+        return res.send({ message: 'Room found', rooms })
+    } catch (error) {
+        console.error(error)
+        return res.status(500).send({ message: 'Error searching Room'})
+    }
+  }
+
+  export const actualizarHabitacion = async (req, res) => {
+    try {
+        const data = req.body
+        const { id } = req.params
+        if (req.file) {
+            const room = await Habitacion.findById(id);
+            console.log(room.image)
+            if (room.image) {
+                const imagePath = '.' + room.image
+                if (fs.existsSync(imagePath)) {
+                    fs.unlinkSync(imagePath)
+                } else {
+                    console.warn('El archivo a eliminar no existe:', imagePath)
+                }
+            }
+            data.image = '/imagenes/' + req.file.filename
         }
 
-        return res.status(200).json({
-            msg: "Lista de todas las habitaciones",
-            habitaciones
-        });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).send("Error al obtener las habitaciones");
-    }
-};
+        const updatedRoom = await Habitacion.findByIdAndUpdate(id, data, { new: true })
 
-
-export const obtenerHabitacionPorId = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const habitacion = await Habitacion.findById(id);
-        if (!habitacion) {
-            return res.status(404).send("Habitación no encontrada");
-        }
-        return res.status(200).json(habitacion);
-    } catch (error) {
-        console.error(error);
-        return res.status(500).send("Error al obtener la habitación por su ID");
-    }
-};
-
-// Actualizar información de una habitación
-export const actualizarHabitacion = async (req, res) => {
-    try {
-        const { tipoHabitacion, capacidad, precio, disponibilidad, hotelAsociado } = req.body;
-        const { id } = req.params;
-
-        const habitacion = await Habitacion.findById(id);
-
-        if (!habitacion) {
-            return res.status(404).json({ msg: "Habitación no encontrada" });
+        if (!updatedRoom) {
+            return res.status(404).send({ message: 'Room not found or not updated' })
         }
 
-        if (tipoHabitacion) habitacion.tipoHabitacion = tipoHabitacion;
-        if (capacidad) habitacion.capacidad = capacidad;
-        if (precio) habitacion.precio = precio;
-        if (disponibilidad !== undefined) habitacion.disponibilidad = disponibilidad;
-        if (hotelAsociado) habitacion.hotelAsociado = hotelAsociado;
-
-        await habitacion.save();
-
-        return res.status(200).json({
-            msg: "Habitación actualizada correctamente",
-            habitacion
-        });
+        return res.send({ message: 'Room updated successfully', updatedRoom })
     } catch (error) {
-        console.error(error);
-        return res.status(500).send("Error al actualizar la habitación");
+        console.error(error)
+        return res.status(500).send({ message: 'Error updating room' })
     }
-};
+}
 
-
-export const eliminarHabitacion = async (req, res) => {
+export const eliminarHabitacion = async(req, res)=>{
     try {
-        const { id } = req.params;
-        const habitacionEliminada = await Habitacion.findByIdAndDelete(id);
-        if (!habitacionEliminada) {
-            return res.status(404).send("Habitación no encontrada");
+        const {id} = req.params
+
+        const habitacion = await Habitacion.findOneAndDelete({_id:id})
+
+        if(!habitacion){
+            return res.status(404).send({message: `Habitacion no encontrada y no eliminada`})
+        }else{
+            return res.send({message:`Habitacion eliminada`, habitacion})
         }
-        return res.status(200).send("Habitación eliminada correctamente");
     } catch (error) {
-        console.error(error);
-        return res.status(500).send("Error al eliminar la habitación");
+        console.error(error)
+        return res.status(500).send({message:`Error al eliminar habitacion`, error})
     }
-};
+}

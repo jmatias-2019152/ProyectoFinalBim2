@@ -1,96 +1,82 @@
 import Hotel from '../hoteles/hoteles.model.js'; // Importa el modelo de Hotel
-
+import User from '../users/user.model.js'
+import Categoria from '../categorias/categoria.model.js'
+import * as fs from 'fs'
+import path from 'path'
 
 // Agregar hotel
 export const agregarHotel = async (req, res) => {
     try {
-        const { nombreHotel, dirección, precio, descripción, serviciosAdicionales, evento } = req.body;
-
+        const userID = req.user.id
+        const {name,categoria,dirección,email} = req.body
+        const existingCategory = await Categoria.findById(categoria)
+        if (!existingCategory) {
+            return res.status(404).send({ message: 'Category not found' })
+        }
         const hotel = new Hotel({
-            nombreHotel,
-            dirección,
-            precio,
-            descripción,
-            serviciosAdicionales,
-            evento
-        });
+            name:name, categoria:categoria, direccion:dirección, email:email,user:userID,
+            image:'/images/' + req.file.filename
+        })
 
-        await hotel.save();
-
-        return res.status(200).json({
-            msg: "¡Hotel agregado exitosamente a la base de datos!",
-            hotel
-        });
+        await hotel.save()
+        return res.send({ message: 'hotel saved successfully' })
     } catch (error) {
-        console.error(error);
-        return res.status(500).send("No se pudo agregar el hotel a la base de datos");
+        console.error(error)
+        return res.status(500).send({ message: 'Error saving hotel' })
     }
 };
 
 // Obtener un hotel
-export const obtenerHoteles = async (req, res) => {
+export const listarHoteles = async (req, res) => {
     try {
-        const hoteles = await Hotel.find();
+        const userID = req.user.id
 
-        if (!hoteles || hoteles.length === 0) {
-            return res.status(404).json({ msg: "No se encontraron hoteles" });
+        let userFind = await User.find({_id: userID})
+        if(!userFind)  return res.status(404).send({message: 'erro user not found'})
+            console.log(userFind)
+        if(userFind.role === 'MANAGER'){
+            let hotels = await Hotel.findOne({user: userID}).populate('category', ['name'])
+
+            return res.send(hotels)
+            
+        }else{
+            let hotels = await Hotel.find().populate('category', ['name'])
+            return res.send(hotels)
         }
-
-        return res.status(200).json({
-            msg: "Lista de todos los hoteles",
-            hoteles
-        });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).send("Error al obtener los hoteles");
+        
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send({ message: 'Error getting hotels' })
     }
-};
-
-
-
-// Obtener un hotel por su ID
-export const obtenerHotelPorId = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const hotel = await Hotel.findById(id);
-        if (!hotel) {
-            return res.status(404).send("Hotel no encontrado");
-        }
-        return res.status(200).json(hotel);
-    } catch (error) {
-        console.error(error);
-        return res.status(500).send("Error al obtener el hotel por su ID");
-    }
-};
+}
 
 // Actualizar información de un hotel
 export const actualizarHotel = async (req, res) => {
     try {
-        const { nombreHotel, dirección, precio, descripcion, serviciosAdicionales, evento } = req.body;
-        const { id } = req.params;
+        const data = req.body
+        const { id } = req.params
+        if (req.file) {
+            let hotel = await Hotel.findById(id)
+            if (hotel.image) {
+                const imagePath = '.' + hotel.image;
+                if (fs.existsSync(imagePath)) {
+                    fs.unlinkSync(imagePath)
+                } else {
+                    console.log('El archivo a eliminar no existe:', imagePath);
+                }
+            }
+            data.image = '/images/' + req.file.filename
+        }
+        let updatedHotel = await Hotel.findByIdAndUpdate(id, data, { new: true }).populate('Categoria', ['name'])
 
-        const hotel = await Hotel.findById(id);
-
-        if (!hotel) {
-            return res.status(404).json({ msg: "Hotel no encontrado" });
+        if (!updatedHotel) {
+            return res.status(404).send({ message: 'Hotel not found or not updated' })
         }
 
-        if (nombreHotel) hotel.nombreHotel = nombreHotel;
-        if (dirección) hotel.dirección = dirección;
-        if (precio) hotel.precio = precio;
-        if (descripcion) hotel.descripcion = descripcion;
-        if (serviciosAdicionales) hotel.serviciosAdicionales = serviciosAdicionales;
-        if (evento) hotel.evento = evento;
-
-        await hotel.save();
-
-        return res.status(200).json({
-            msg: "Hotel actualizado correctamente",
-            hotel
-        });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).send("Error al actualizar el hotel");
+        return res.send({ message: 'Hotel updated successfully', updatedHotel })
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send({ message: 'Error updating hotel' })
     }
 };
 
@@ -98,13 +84,31 @@ export const actualizarHotel = async (req, res) => {
 export const eliminarHotel = async (req, res) => {
     try {
         const { id } = req.params;
-        const hotelEliminado = await Hotel.findByIdAndDelete(id);
-        if (!hotelEliminado) {
-            return res.status(404).send("Hotel no encontrado");
+        const hotel = await Hotel.findById(id)
+        if (hotel && hotel.image) {
+            await deleteHotelImage(hotel.image)
         }
-        return res.status(200).send("Hotel eliminado correctamente");
+        await Hotel.deleteOne({ _id: id })
+
+        // Responder
+        return res.send({ message: 'Hotel deleted successfully' })
     } catch (error) {
-        console.error(error);
-        return res.status(500).send("Error al eliminar el hotel");
+        console.error('Error deleting hotel:', error);
+        return res.status(500).send({ message: 'Error deleting hotel' })
     }
 };
+
+// Buscar hoteles
+export const buscarHoteles = async (req, res)=>{
+    try{
+        const {name} = req.body
+        const regex = new RegExp(name,'i')
+        const hotels = await Hotel.find({name: regex}).populate('Categoria', ['name', 'email', 'direccion'])
+        if(!hotels) return res.status(400).send({message: 'hotels not found'})
+        return res.send({message:`hotels found`, hotels})
+    }catch(err){
+        console.error(err)
+        return res.status(500).send({message:'error searching hotels'})
+    }
+
+}
