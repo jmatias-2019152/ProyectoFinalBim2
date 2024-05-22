@@ -4,8 +4,8 @@ import path from 'path';
 
 export const agregarHabitacion = async(req, res)=>{
     try {
-        let {roomName, description, price, hotel} = req.body
-        let habitacion = new Habitacion({
+        const {roomName, description, price, hotel} = req.body
+        const habitacion = new Habitacion({
             roomName:roomName, 
             description:description,
             price:price,

@@ -47,9 +47,9 @@ export const actualizarCategoria = async (req, res) => {
 //Buscar categoria
 export const buscarCategoria = async (req, res) => {
     try {
-        let { search } = req.body
+        const { search } = req.body
         const aprox = new RegExp(search, 'i')
-        let categoria = await Categoria.find({ name: aprox })
+        const categoria = await Categoria.find({ name: aprox })
         if (!categoria) return res.status(404).send({ message: 'Category not found' })
         return res.send({ message: 'Category found', categoria })
     } catch (error) {

@@ -12,7 +12,8 @@ import userRoutes from '../src/users/user.routes.js'
 import serviciosRoutes from '../src/serviciosAdicionales/servicios.routes.js'
 import eventosRoutes from '../src/eventos/eventos.routes.js'
 import categoriaRoutes from '../src/categorias/categoria.routes.js'
-
+import reservacionesRoutes from '../src/reservaciones/reservaciones.routes.js'
+import facturaRoutes from '../src/factura/factura.routes.js'
 
 
 class Server {
@@ -26,6 +27,7 @@ class Server {
         this.serviciosAdPath = '/api_Hoteles/v1/servicios'
         this.eventosPath = '/api_Hoteles/v1/eventos'
         this.categoriPath = '/api_Hoteles/v1/categorias'
+        this.reservacionePath= '/api_Hoteles/v1/categorias'
         this.conectarDB(); 
         this.middlewares();
         this.routes();
@@ -54,6 +56,7 @@ class Server {
         this.app.use(this.serviciosAdPath, serviciosRoutes)
         this.app.use(this.eventosPath, eventosRoutes)
         this.app.use(this.categoriPath, categoriaRoutes)
+        this.app.use(this.reservacionePath, reservacionesRoutes)
     };
 
 

@@ -31,16 +31,16 @@ export const listarHoteles = async (req, res) => {
     try {
         const userID = req.user.id
 
-        let userFind = await User.find({_id: userID})
+        const userFind = await User.find({_id: userID})
         if(!userFind)  return res.status(404).send({message: 'erro user not found'})
             console.log(userFind)
         if(userFind.role === 'MANAGER'){
-            let hotels = await Hotel.findOne({user: userID}).populate('category', ['name'])
+            const hotels = await Hotel.findOne({user: userID}).populate('category', ['name'])
 
             return res.send(hotels)
             
         }else{
-            let hotels = await Hotel.find().populate('category', ['name'])
+            const hotels = await Hotel.find().populate('category', ['name'])
             return res.send(hotels)
         }
         
@@ -56,7 +56,7 @@ export const actualizarHotel = async (req, res) => {
         const data = req.body
         const { id } = req.params
         if (req.file) {
-            let hotel = await Hotel.findById(id)
+            const hotel = await Hotel.findById(id)
             if (hotel.image) {
                 const imagePath = '.' + hotel.image;
                 if (fs.existsSync(imagePath)) {
@@ -67,7 +67,7 @@ export const actualizarHotel = async (req, res) => {
             }
             data.image = '/images/' + req.file.filename
         }
-        let updatedHotel = await Hotel.findByIdAndUpdate(id, data, { new: true }).populate('Categoria', ['name'])
+        const updatedHotel = await Hotel.findByIdAndUpdate(id, data, { new: true }).populate('Categoria', ['name'])
 
         if (!updatedHotel) {
             return res.status(404).send({ message: 'Hotel not found or not updated' })

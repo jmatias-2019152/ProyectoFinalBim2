@@ -1,29 +1,45 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const ReservacionSchema = mongoose.Schema({
-    usuario: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: [true, "El usuario es obligatorio"]
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'user',
+        required: true
     },
-    habitacion: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "TipoHabitacion",
-        required: [true, "La habitación es obligatoria"]
-    },
-    fechaFin: {
+    startDate: {
         type: Date,
-        required: [true, "La fecha de fin es obligatoria"]
+        required: true
     },
-    estado: {
-        type: String,
-        enum: ["PENDIENTE", "CONFIRMADA", "CANCELADA"],
-        default: "PENDIENTE"
+    endDate: {
+        type: Date,
+        required: true
     },
-    total: {
-        type: Number,
-        required: [true, "El total es obligatorio"]
-    }
+    room: {
+        type: Schema.Types.ObjectId,
+        ref: 'room',
+        required: false
+    },
+    event: {
+        type: Schema.Types.ObjectId,
+        ref: 'event',
+        required: false
+    },
+    arrServices: [{
+        service: {
+            type: Schema.Types.ObjectId,
+            ref: 'service',
+            required: false
+        },
+        cant: {
+            type: Number, 
+            requerid: false, 
+        },
+        subtotal: {
+            type: Number, 
+            requerid: false, 
+            default: 0
+        } 
+    }]
 },{
     timestamps:true 
 });

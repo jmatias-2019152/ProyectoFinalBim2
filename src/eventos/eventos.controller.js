@@ -6,7 +6,7 @@ import * as fs from 'fs'
 // Obtener todos los eventos
 export const listarEventos = async (req, res) => {
     try {
-      let events = await Event.find().populate('Hotel', ['name', 'email'])
+      const events = await Event.find().populate('Hotel', ['name', 'email'])
       return res.send(events) 
     } catch (error) {
       console.log(error)

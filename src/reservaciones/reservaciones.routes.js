@@ -1,14 +1,40 @@
 import { Router } from "express";
-import { listarReservaciones, crearReservacion, actualizarReservacion, eliminarReservacion } from "../reservaciones/reservaciones.controller.js"
-
+import { addService, deleteReservation, getReservationRoom, getReservations, getReservedUser, saveReservation } from "../reservaciones/reservaciones.controller.js"
+import { validarJWT } from "../middlewares/validar-jwt.js";
 const router = Router()
 
-router.get("/listarReservaciones", listarReservaciones)
+router.post(
+    '/agregar',
+    [validarJWT],
+    saveReservation
+)
 
-router.post("/crearReservacion", crearReservacion)
+router.delete(
+    '/delete/:id',
+    [validarJWT],
+    deleteReservation
+)
 
-router.put("/actualizarReservacion/:id", actualizarReservacion)
+router.get(
+    '/reservaciones',
+    [validarJWT],
+    getReservations
+)
 
-router.delete("/eliminarReservacion/:id",  eliminarReservacion)
+router.post(
+    '/addServicio/:id',
+    [validarJWT],
+    addService
+)
 
+router.get(
+    '/habitacionesReservacion',
+    [validarJWT],
+    getReservationRoom
+)
+
+router.get(
+    '/userReservacion', [validarJWT], 
+    getReservedUser
+)
 export default router;
